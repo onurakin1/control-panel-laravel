@@ -43,7 +43,8 @@ class ProductController extends Controller
         $productDescription = ProductDescription::create([
             'product_id' => $product->product_id,
             'name' => $request['name'],
-            'desc' => $request['desc']
+            'desc' => $request['desc'],
+            'language_id' => $request['language_id']
         ]);
 
         $categoryToProduct = CategoryToProduct::create([
@@ -60,7 +61,7 @@ class ProductController extends Controller
         $productToBranch = BranchToProduct::create([
             'product_id' => $product->product_id,
             'branch_id' => $request['branch_id'],
-            'date_added' => $today, 
+            'date_added' => $today,
             'image' => $request['image'],
             'is_new_product' => $request['is_new_product'],
         ]);
@@ -79,25 +80,25 @@ class ProductController extends Controller
             ->join('tbl_product_description', 'tbl_product.product_id', '=', 'tbl_product_description.product_id')
             ->join('tbl_product_price', 'tbl_product.product_id', '=', 'tbl_product_price.product_id')
             ->get();
-    
+
         // Ürünlerin product_id değerlerini topluyoruz
         $productIds = $categoryGroups->pluck('product_id')->toArray();
-    
+
         // Bu product_id'lere karşılık gelen allerjen bilgilerini getiriyoruz
         $allergens = AllergenToProduct::whereIn('tbl_product_to_allergen.product_id', $productIds)
             ->join('tbl_product_allergen_description', 'tbl_product_to_allergen.allergen_id', '=', 'tbl_product_allergen_description.allergen_id')
             ->select('tbl_product_to_allergen.product_id', 'tbl_product_to_allergen.allergen_id', 'tbl_product_allergen_description.name', 'tbl_product_allergen_description.language_id')
             ->get();
-    
+
         // Allerjen bilgilerini product_id'ye göre gruplayalım
         $allergensGrouped = $allergens->groupBy('product_id');
-    
+
         // Her ürün objesine ilgili allerjen bilgilerini ekleyelim
-        $categoryGroups->transform(function($item) use ($allergensGrouped) {
+        $categoryGroups->transform(function ($item) use ($allergensGrouped) {
             $item->allergens = $allergensGrouped->get($item->product_id, []); // Eğer allergen yoksa boş array dönecek
             return $item;
         });
-    
+
         // Sonuçları json formatında geri döndürüyoruz
         return response()->json($categoryGroups);
     }
@@ -107,25 +108,25 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $today = Carbon::today();
-    
-     
+
+
         $product = Product::findOrFail($id);
-    
-   
+
+
         $product->update([
             'image' => $request['image'],
             'video' => $request['video'],
             'is_new_product' => $request['is_new_product'],
             'sort_order' => $request['sort_order'],
-            'updated_at' => $today // Güncelleme tarihi bugünün tarihi olacak
+            'updated_at' => $today
         ]);
-    
- 
+
+
         $productDescription = ProductDescription::where('product_id', $product->product_id)->first();
         if ($productDescription) {
             $productDescription->update([
                 'name' => $request['name'],
-                'desc' => $request['desc']
+                'desc' => $request['desc'],
             ]);
         }
 
@@ -136,11 +137,17 @@ class ProductController extends Controller
             ]);
         }
 
-        $productToAllergen = ProductToAllergen::where('product_id', $product->product_id)->first();
-        if ($productToAllergen) {
-            $productToAllergen->update([
-                'allergen_id' => $request['allergen_id']
-            ]);
+        if ($request->has('allergens') && is_array($request->allergens)) {
+            // Önce mevcut tüm ilişkileri sil
+            ProductToAllergen::where('product_id', $product->product_id)->delete();
+    
+            // Yeni ilişkileri ekle
+            foreach ($request->allergens as $allergen_id) {
+                ProductToAllergen::create([
+                    'product_id' => $product->product_id,
+                    'allergen_id' => $allergen_id
+                ]);
+            }
         }
 
         $productToBranch = BranchToProduct::where('product_id', $product->product_id)->first();
@@ -149,7 +156,7 @@ class ProductController extends Controller
                 'branch_id' => $request['branch_id']
             ]);
         }
-    
+
         $updatedCategory = Product::with('products')->find($request['category_id']);
         return $updatedCategory;
     }
