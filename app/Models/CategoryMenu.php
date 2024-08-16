@@ -11,5 +11,5 @@ class CategoryMenu extends Model
     public $timestamps = false;
     protected $table = "tbl_category_groups";
     protected $primaryKey = 'id';
-    protected $fillable = ["name", "image", "branch_id", "created_date"];
+    protected $fillable = ["name", "image", "branch_id", "created_date", "language_id"];
 }
