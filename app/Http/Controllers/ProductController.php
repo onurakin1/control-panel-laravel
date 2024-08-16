@@ -74,37 +74,33 @@ class ProductController extends Controller
      */
     public function show($category_id)
     {
-        // Ürün bilgilerini getiriyoruz
+ 
         $categoryGroups = CategoryToProduct::where('tbl_category_to_product.category_id', $category_id)
             ->join('tbl_product', 'tbl_category_to_product.product_id', '=', 'tbl_product.product_id')
             ->join('tbl_product_description', 'tbl_product.product_id', '=', 'tbl_product_description.product_id')
             ->join('tbl_product_price', 'tbl_product.product_id', '=', 'tbl_product_price.product_id')
             ->get();
 
-        // Ürünlerin product_id değerlerini topluyoruz
+    
         $productIds = $categoryGroups->pluck('product_id')->toArray();
 
-        // Bu product_id'lere karşılık gelen allerjen bilgilerini getiriyoruz
         $allergens = AllergenToProduct::whereIn('tbl_product_to_allergen.product_id', $productIds)
             ->join('tbl_product_allergen_description', 'tbl_product_to_allergen.allergen_id', '=', 'tbl_product_allergen_description.allergen_id')
             ->select('tbl_product_to_allergen.product_id', 'tbl_product_to_allergen.allergen_id', 'tbl_product_allergen_description.name', 'tbl_product_allergen_description.language_id')
             ->get();
 
-        // Allerjen bilgilerini product_id'ye göre gruplayalım
         $allergensGrouped = $allergens->groupBy('product_id');
 
-        // Her ürün objesine ilgili allerjen bilgilerini ekleyelim
+
         $categoryGroups->transform(function ($item) use ($allergensGrouped) {
             $item->allergens = $allergensGrouped->get($item->product_id, []); // Eğer allergen yoksa boş array dönecek
             return $item;
         });
 
-        // Sonuçları json formatında geri döndürüyoruz
+
         return response()->json($categoryGroups);
     }
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(Request $request, $id)
     {
         $today = Carbon::today();
@@ -138,10 +134,10 @@ class ProductController extends Controller
         }
 
         if ($request->has('allergens') && is_array($request->allergens)) {
-            // Önce mevcut tüm ilişkileri sil
+        
             ProductToAllergen::where('product_id', $product->product_id)->delete();
     
-            // Yeni ilişkileri ekle
+        
             foreach ($request->allergens as $allergen_id) {
                 ProductToAllergen::create([
                     'product_id' => $product->product_id,

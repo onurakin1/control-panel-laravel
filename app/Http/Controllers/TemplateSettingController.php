@@ -34,6 +34,7 @@ class TemplateSettingController extends Controller
             'languages.*' => 'required|string',
             'layout' => 'required|string',
             'size' => 'required|string',
+            'user_id' => 'required'
         ]);
     
         // Create the TemplateSetting using validated data
@@ -44,7 +45,8 @@ class TemplateSettingController extends Controller
             'banner' => $validatedData['banner'],
             'languages' => json_encode($validatedData['languages']), // Store as JSON if needed
             'layout' => $validatedData['layout'],
-            'size' => $validatedData['size']
+            'size' => $validatedData['size'],
+            'user_id'=> $validatedData['user_id']
         ]);
     
         // Return the newly created template setting

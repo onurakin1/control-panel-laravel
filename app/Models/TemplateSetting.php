@@ -11,5 +11,5 @@ class TemplateSetting extends Model
     public $timestamps = false;
     protected $table = "tbl_template_settings";
     protected $primaryKey = 'id';
-    protected $fillable = ['color', 'logo', 'name', 'banner', 'languages', 'layout', 'size'];
+    protected $fillable = ['color', 'logo', 'name', 'banner', 'languages', 'layout', 'size', 'user_id'];
 }
