@@ -101,11 +101,13 @@ class ProductCategoryController extends Controller
         $productCategories = ProductCategory::where('group_id', $group_id)
             ->where('parent_id', 0)
             ->join('tbl_product_category_description', 'tbl_product_category.category_id', '=', 'tbl_product_category_description.category_id')
+            ->join('tbl_branch_to_category', 'tbl_product_category.category_id', '=', 'tbl_branch_to_category.category_id')
             // ->select('tbl_product_category.*', 'tbl_product_category_description.name as category_name')
             ->get();
 
         foreach ($productCategories as $category) {
             $category->child = ProductCategory::join('tbl_product_category_description', 'tbl_product_category.category_id', '=', 'tbl_product_category_description.category_id')
+            ->join('tbl_branch_to_category', 'tbl_product_category.category_id', '=', 'tbl_branch_to_category.category_id')
                 // ->select('tbl_product_category.*', 'tbl_product_category_description.name as category_name')
                 ->where('parent_id', $category->category_id)->get();
         }
