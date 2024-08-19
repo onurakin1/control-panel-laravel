@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\TemplateSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -44,11 +45,19 @@ class AuthController extends Controller
                 'message' => 'The provided credentials are incorrect.'
             ];
         }
+   
+        $userWithTemplate = User::where('users.id', $user->id)
+        ->join('tbl_template_settings', 'users.id', '=', 'tbl_template_settings.user_id')
+        ->select('users.*', 'tbl_template_settings.logo')
+        ->first();
+ 
         $token = $user->createToken($user->name);
 
         return [
             'user' => $user,
-            'token' => $token->plainTextToken
+            'token' => $token->plainTextToken,
+            'template' => $userWithTemplate->logo
+     
         ];
     }
 
