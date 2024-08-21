@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductDescriptionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TemplateSettingController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CompanyController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\FileUploadController;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +26,7 @@ Route::apiResource('product', ProductController::class);
 Route::apiResource('product-description', ProductDescriptionController::class);
 Route::apiResource('allergen', AllergenController::class);
 Route::apiResource('template', TemplateSettingController::class);
+Route::apiResource('company', CompanyController::class);
 
 
 Route::get('/export', [UserController::class, 'export']);

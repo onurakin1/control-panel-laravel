@@ -47,8 +47,8 @@ class AuthController extends Controller
         }
    
         $userWithTemplate = User::where('users.id', $user->id)
-        ->join('tbl_template_settings', 'users.id', '=', 'tbl_template_settings.user_id')
-        ->select('users.*', 'tbl_template_settings.logo')
+        ->join('tbl_company', 'users.id', '=', 'tbl_company.user_id')
+        ->select('users.*', 'tbl_company.logo')
         ->first();
  
         $token = $user->createToken($user->name);
@@ -56,7 +56,7 @@ class AuthController extends Controller
         return [
             'user' => $user,
             'token' => $token->plainTextToken,
-            'template' => $userWithTemplate->logo
+            'company' => $userWithTemplate->logo
      
         ];
     }
