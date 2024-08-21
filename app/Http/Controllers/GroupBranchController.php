@@ -23,7 +23,12 @@ class GroupBranchController extends Controller
     {
         $fields = $request->validate([
             'branch_name' => 'required|max:255',
+            'branch_name_summary' => 'required',
+            'branch_price_type' => 'required',
             'branch_city' => 'required',
+            'branch_address' => 'required',
+            'branch_phone' => 'required',
+            'branch_mail' => 'required',
 
         ]);
 
@@ -55,9 +60,6 @@ class GroupBranchController extends Controller
             'branch_address' => 'required',
             'branch_phone' => 'required',
             'branch_mail' => 'required',
-            'branch_lat' => 'required',
-            'branch_lng' => 'required',
-            'branch_username' => 'required',
         ]);
 
         $groupBranch->update($fields);
