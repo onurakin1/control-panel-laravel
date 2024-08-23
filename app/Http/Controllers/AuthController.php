@@ -33,30 +33,28 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-
             'email' => 'required|email|exists:users',
             'password' => 'required'
         ]);
-
+    
         $user = User::where('email', $request->email)->first();
-
+    
         if (!$user || !Hash::check($request->password, $user->password)) {
             return [
                 'message' => 'The provided credentials are incorrect.'
             ];
         }
-   
+    
         $userWithTemplate = User::where('users.id', $user->id)
-        ->join('tbl_company', 'users.id', '=', 'tbl_company.user_id')
-        ->first();
- 
+            ->join('tbl_company', 'users.id', '=', 'tbl_company.user_id')
+            ->first();
+    
         $token = $user->createToken($user->name);
-
+    
         return [
             'user' => $user,
             'token' => $token->plainTextToken,
-            'company' => $userWithTemplate->logo
-     
+            'company' => $userWithTemplate ? $userWithTemplate->logo : null
         ];
     }
 
