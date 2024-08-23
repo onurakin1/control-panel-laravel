@@ -11,5 +11,5 @@ class Company extends Model
     public $timestamps = false;
     protected $table = "tbl_company";
     protected $primaryKey = 'id';
-    protected $fillable = ["company_name", "logo"];
+    protected $fillable = ["company_name", "logo", "user_id"];
 }
