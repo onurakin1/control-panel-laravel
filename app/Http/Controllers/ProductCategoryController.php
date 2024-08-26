@@ -154,12 +154,12 @@ class ProductCategoryController extends Controller
             $description = ProductCategoryDescription::where('category_id', $categoryData['category_id'])->first();
             if ($description) {
                 $description->update([
-                    'name' => $categoryData['category_name']
+                    'name' => $categoryData['name']
                 ]);
             } else {
                 ProductCategoryDescription::create([
                     'category_id' => $categoryData['category_id'],
-                    'name' => $categoryData['category_name']
+                    'name' => $categoryData['name']
                 ]);
             }
 
@@ -210,12 +210,12 @@ class ProductCategoryController extends Controller
         $description = ProductCategoryDescription::where('category_id', $categoryData['category_id'])->first();
         if ($description) {
             $description->update([
-                'name' => $categoryData['category_name']
+                'name' => $categoryData['name']
             ]);
         } else {
             $description = ProductCategoryDescription::create([
                 'category_id' => $categoryData['category_id'],
-                'name' => $categoryData['category_name']
+                'name' => $categoryData['name']
             ]);
         }
     
