@@ -27,10 +27,8 @@ Route::apiResource('product-description', ProductDescriptionController::class);
 Route::apiResource('allergen', AllergenController::class);
 Route::apiResource('template', TemplateSettingController::class);
 Route::apiResource('company', CompanyController::class);
+Route::apiResource('user', UserController::class);
 
-
-Route::get('/export', [UserController::class, 'export']);
-Route::post('/import', [UserController::class, 'import']);
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);

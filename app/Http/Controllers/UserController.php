@@ -3,32 +3,26 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\UsersExport;
-use App\Imports\ImportUsers;
+use App\Models\User;
 
 class UserController extends Controller
 {
 
-    public function export()
+    public function index()
     {
-        return Excel::download(new UsersExport, 'users.xlsx');
+        return User::all();
     }
-
-    public function import(Request $request)
+    public function show($id)
     {
-        // Validate the uploaded file
-        $request->validate([
-            'file' => 'required|mimes:xlsx,xls,csv|max:2048',
-        ]);
+        $company = User::where('id', $id)
+            ->get();
 
-        try {
-
-            Excel::import(new ImportUsers, $request->file('file'));
-            return response()->json(['data' => 'Users imported successfully.', 201]);
-        } catch (\Exception $ex) {
-
-            return response()->json(['data' => 'Some error has occur.', 400]);
-        }
+        return response()->json($company);
+    }
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $user->update($request->all());
+        return response()->json($user);
     }
 }
