@@ -6,6 +6,7 @@ use App\Models\ProductCategory;
 use App\Models\ProductCategoryDescription;
 
 use App\Http\Controllers\Controller;
+use App\Models\BranchToCategory;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -101,8 +102,9 @@ class ProductCategoryController extends Controller
         $productCategories = ProductCategory::where('group_id', $group_id)
             ->where('parent_id', 0)
             ->join('tbl_product_category_description', 'tbl_product_category.category_id', '=', 'tbl_product_category_description.category_id')
-            ->join('tbl_branch_to_category', 'tbl_product_category.category_id', '=', 'tbl_branch_to_category.category_id')
-            // ->select('tbl_product_category.*', 'tbl_product_category_description.name as category_name')
+            
+            ->rightJoin('tbl_branch_to_category', 'tbl_product_category.category_id', '=', 'tbl_branch_to_category.category_id')
+ 
             ->get();
 
         foreach ($productCategories as $category) {
@@ -148,6 +150,12 @@ class ProductCategoryController extends Controller
                  'created_at' => $categoryData['created_at'],
                  'updated_at' => $categoryData['updated_at'],
                  'visible' => $categoryData['visible']
+             ]);
+
+             $branchToCategory = BranchToCategory::where('category_id', $categoryData['category_id'])->first();
+
+             $branchToCategory->update([
+                'sort_order' =>  $categoryData['sort_order'],
              ]);
      
              // Ana kategori açıklaması güncellemesi
