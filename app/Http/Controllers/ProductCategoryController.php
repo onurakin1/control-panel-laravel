@@ -118,61 +118,63 @@ class ProductCategoryController extends Controller
      * Update the specified resource in storage.
      */
 
-    public function update(Request $request)
-    {
-        // Gelen verileri loglayın
-        Log::info('Received data:', $request->all());
-
-        $updatedCategories = [];
-
-        foreach ($request->all() as $categoryData) {
-            Log::info('Processing category with ID:', ['category_id' => $categoryData['category_id']]);
-
-            $productCategory = ProductCategory::find($categoryData['category_id']);
-
-            if (!$productCategory) {
-                Log::warning('No product category found for ID:', ['category_id' => $categoryData['category_id']]);
-                continue;
-            }
-
-            // Ana kategori güncellemesi
-            $productCategory->update([
-                'group_id' => $categoryData['group_id'],
-                'parent_id' => $categoryData['parent_id'],
-                'image' => $categoryData['image'],
-                'description' => $categoryData['description'],
-                'sort_order' => $categoryData['sort_order'],
-                'is_new_category' => $categoryData['is_new_category'],
-                'clicked_count' => $categoryData['clicked_count'],
-                'date_added' => $categoryData['date_added'],
-                'created_at' => $categoryData['created_at'],
-                'updated_at' => $categoryData['updated_at'],
-                'visible' => $categoryData['visible']
-            ]);
-
-            // Ana kategori açıklaması güncellemesi
-            $description = ProductCategoryDescription::where('category_id', $categoryData['category_id'])->first();
-            if ($description) {
-                $description->update([
-                    'name' => $categoryData['name']
-                ]);
-            } else {
-                ProductCategoryDescription::create([
-                    'category_id' => $categoryData['category_id'],
-                    'name' => $categoryData['name']
-                ]);
-            }
-
-            $updatedCategory = $productCategory;
-
-
-
-
-            $updatedCategories[] = $updatedCategory;
-        }
-
-        return response()->json(['message' => 'Categories updated successfully.', 'data' => $updatedCategories]);
-    }
+     public function update(Request $request)
+     {
+         // Gelen verileri loglayın
+         Log::info('Received data:', $request->all());
+     
+         $updatedCategories = [];
+     
+         foreach ($request->all() as $categoryData) {
+             Log::info('Processing category with ID:', ['category_id' => $categoryData['category_id']]);
+     
+             $productCategory = ProductCategory::find($categoryData['category_id']);
+     
+             if (!$productCategory) {
+                 Log::warning('No product category found for ID:', ['category_id' => $categoryData['category_id']]);
+                 continue;
+             }
+     
+             // Ana kategori güncellemesi
+             $productCategory->update([
+                 'group_id' => $categoryData['group_id'],
+                 'parent_id' => $categoryData['parent_id'],
+                 'image' => $categoryData['image'],
+                 'description' => $categoryData['description'],
+                 'sort_order' => $categoryData['sort_order'],
+                 'is_new_category' => $categoryData['is_new_category'],
+                 'clicked_count' => $categoryData['clicked_count'],
+                 'date_added' => $categoryData['date_added'],
+                 'created_at' => $categoryData['created_at'],
+                 'updated_at' => $categoryData['updated_at'],
+                 'visible' => $categoryData['visible']
+             ]);
+     
+             // Ana kategori açıklaması güncellemesi
+             $description = ProductCategoryDescription::where([
+                 ['category_id', $categoryData['category_id']],
+                 ['language_id', $categoryData['language_id']]
+             ])->first();
+     
+             if ($description) {
+                 $description->update([
+                     'name' => $categoryData['name']
+                 ]);
+             } else {
+                 ProductCategoryDescription::create([
+                     'category_id' => $categoryData['category_id'],
+                     'language_id' => $categoryData['language_id'],
+                     'name' => $categoryData['name']
+                 ]);
+             }
+     
+             $updatedCategory = $productCategory;
+     
+             $updatedCategories[] = $updatedCategory;
+         }
+     
+         return response()->json(['message' => 'Categories updated successfully.', 'data' => $updatedCategories]);
+     }
 
 
     public function updateAll(Request $request)
