@@ -11,8 +11,13 @@ use App\Http\Controllers\TemplateSettingController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\FileUploadController;
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\CategoryProductExcelmportController;
+use App\Exports\CategoryProductExport;
+use App\Imports\CategoryProductImport;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -34,11 +39,12 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 Route::post('/upload', [FileUploadController::class, 'uploadFile']);
-// Route::get('product-category', [ProductCategoryController::class, 'index']);
-// Route::get('product-category/{group_id}', [ProductCategoryController::class, 'show']);
-// Route::post('product-category', [ProductCategoryController::class, 'store']);
-// Route::delete('product-category/{productCategory}', [ProductCategoryController::class, 'destroy']);
-// Route::put('product-category', [ProductCategoryController::class, 'update']);
+
+Route::get('/export-category', function () {
+    return Excel::download(new CategoryProductExport, 'users.xlsx');
+});
+
+Route::post('/import-category', [CategoryProductExcelmportController::class, 'import']);
 Route::get('/', function(){
     return 'API';
 });
