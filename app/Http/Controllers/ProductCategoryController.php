@@ -104,12 +104,13 @@ class ProductCategoryController extends Controller
             ->join('tbl_product_category_description', 'tbl_product_category.category_id', '=', 'tbl_product_category_description.category_id')
             
             ->rightJoin('tbl_branch_to_category', 'tbl_product_category.category_id', '=', 'tbl_branch_to_category.category_id')
- 
+            ->select('tbl_product_category.*', 'tbl_branch_to_category.branch_id', 'tbl_product_category_description.name', 'tbl_product_category_description.language_id')
             ->get();
 
         foreach ($productCategories as $category) {
             $category->child = ProductCategory::join('tbl_product_category_description', 'tbl_product_category.category_id', '=', 'tbl_product_category_description.category_id')
             ->join('tbl_branch_to_category', 'tbl_product_category.category_id', '=', 'tbl_branch_to_category.category_id')
+            ->select('tbl_product_category.*', 'tbl_branch_to_category.branch_id', 'tbl_product_category_description.name', 'tbl_product_category_description.language_id')
                 // ->select('tbl_product_category.*', 'tbl_product_category_description.name as category_name')
                 ->where('parent_id', $category->category_id)->get();
         }
@@ -128,12 +129,12 @@ class ProductCategoryController extends Controller
          $updatedCategories = [];
      
          foreach ($request->all() as $categoryData) {
-             Log::info('Processing category with ID:', ['category_id' => $categoryData['category_id']]);
+             Log::info('Processing category with ID:', ['category_id' => $categoryData['id']]);
      
-             $productCategory = ProductCategory::find($categoryData['category_id']);
+             $productCategory = ProductCategory::find($categoryData['id']);
      
              if (!$productCategory) {
-                 Log::warning('No product category found for ID:', ['category_id' => $categoryData['category_id']]);
+                 Log::warning('No product category found for ID:', ['id' => $categoryData['id']]);
                  continue;
              }
      

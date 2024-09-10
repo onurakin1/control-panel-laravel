@@ -79,6 +79,7 @@ class ProductController extends Controller
             ->join('tbl_product', 'tbl_category_to_product.product_id', '=', 'tbl_product.product_id')
             ->join('tbl_product_description', 'tbl_product.product_id', '=', 'tbl_product_description.product_id')
             ->join('tbl_product_price', 'tbl_product.product_id', '=', 'tbl_product_price.product_id')
+            ->select('tbl_product.*', 'tbl_category_to_product.category_id', 'tbl_product_description.language_id', 'tbl_product_description.name', 'tbl_product_description.desc', 'tbl_product_price.price', 'tbl_product_price.branch_id')
             ->get();
 
     
@@ -118,7 +119,9 @@ class ProductController extends Controller
         ]);
 
 
-        $productDescription = ProductDescription::where('product_id', $product->product_id)->first();
+        $productDescription = ProductDescription::where('product_id', $product->product_id)
+        ->where('language_id', $request['language_id'])
+        ->first();
         if ($productDescription) {
             $productDescription->update([
                 'name' => $request['name'],
