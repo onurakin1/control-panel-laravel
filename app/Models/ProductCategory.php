@@ -11,8 +11,8 @@ class ProductCategory extends Model
     use HasFactory;
     public $timestamps = false;
     protected $table = "tbl_product_category";
-    protected $primaryKey = 'category_id';
-    protected $fillable = ["group_id", "parent_id", "image", "sort_order", "is_new_category", "description", "clicked_count", "date_added", "created_at", "updated_at"];
+    protected $primaryKey = 'id';
+    protected $fillable = ["group_id", "category_id", "parent_id", "image", "sort_order", "is_new_category", "description", "clicked_count", "date_added", "created_at", "updated_at"];
 
     public function descriptions()
     {

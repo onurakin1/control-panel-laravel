@@ -1,34 +1,39 @@
 <?php
 
 namespace App\Exports;
-use App\Models\ProductCategory;
+
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithTitle;
+use App\Models\Product;
+use App\Models\ProductDescription;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class CategoryProductExport implements FromCollection, WithTitle, WithHeadings
+class ProductExport implements FromCollection, WithTitle, WithHeadings
 {
     /**
     * @return \Illuminate\Support\Collection
     */
     public function collection()
     {
-        return ProductCategory::all();
+        return Product::all();
     }
 
     public function title(): string
     {
-        return 'Category'; // Sheet adı
+        return 'Products'; // Sheet adı
     }
 
     public function headings(): array
     {
         return [
             'ID',
-            'Group',
-            'Parent ID',
+            'Product ID',
+            'Integration ID',
             'Image',
-            'Sort Order'
+            'Video',
+            'Is New Product',
+            'Sort Order',
+            'Clicked Count'
         ];
     }
 }

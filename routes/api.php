@@ -15,7 +15,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\FileUploadController;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\CategoryProductExcelmportController;
+use App\Http\Controllers\CategoryProductExcelImportController;
 use App\Exports\CategoryProductExport;
 use App\Imports\CategoryProductImport;
 
@@ -40,11 +40,9 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 Route::post('/upload', [FileUploadController::class, 'uploadFile']);
 
-Route::get('/export-category', function () {
-    return Excel::download(new CategoryProductExport, 'users.xlsx');
-});
+Route::get('/export-category-products', [CategoryProductExcelImportController::class, 'export']);
 
-Route::post('/import-category', [CategoryProductExcelmportController::class, 'import']);
+Route::post('/import-category', [CategoryProductExcelImportController::class, 'import']);
 Route::get('/', function(){
     return 'API';
 });

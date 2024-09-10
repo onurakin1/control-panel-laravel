@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\CategoryToProduct;
 use App\Models\ProductToAllergen;
-
+use App\Models\ProductDescription;
 class Product extends Model
 {
     use HasFactory;
     public $timestamps = false;
     protected $table = "tbl_product";
-    protected $primaryKey = 'product_id';
-    protected $fillable = ["image", "video", "is_new_product", "sort_order", "date_added", "created_at"];
+    protected $primaryKey = 'id';
+    protected $fillable = ["product_id", "image", "video", "is_new_product", "sort_order", "date_added", "created_at"];
 
     public function products()
     {
@@ -23,5 +23,10 @@ class Product extends Model
     public function allergens()
     {
         return $this->hasMany(ProductToAllergen::class, 'allergen_id');
+    }
+
+    public function productDescriptions()
+    {
+        return $this->hasMany(ProductDescription::class, 'product_id');
     }
 }

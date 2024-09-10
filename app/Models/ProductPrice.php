@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Allergen extends Model
+class ProductPrice extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $table = "tbl_product_allergen";
+    protected $table = "tbl_product_price";
     protected $primaryKey = 'id';
-    protected $fillable = ["allergen_id", "image", "sort_order", "date_added", "visible"];
+    protected $fillable = ["product_id", "branch_id", "price", "date_added", "date_modified"];
 
 }
