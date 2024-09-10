@@ -24,7 +24,7 @@ class CategoryProductExcelImportController extends Controller
 
         try {
             Excel::import(new MultiSheetImport, $request->file('file'));
-            return response()->json(['data' => 'Categories and Products imported successfully.'], 201);
+            return response()->json(['data' => 'Categories and Products imported successfully.'], 200);
         } catch (\Exception $ex) {
             Log::error('Import Error: ' . $ex->getMessage()); // Hata mesajını logla
             return response()->json(['error' => $ex->getMessage()], 400);
