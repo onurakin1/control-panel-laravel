@@ -16,6 +16,7 @@ use App\Http\Controllers\FileUploadController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\CategoryProductExcelImportController;
+use App\Http\Controllers\MultipleImageUploadController;
 use App\Exports\CategoryProductExport;
 use App\Imports\CategoryProductImport;
 
@@ -39,7 +40,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 Route::post('/upload', [FileUploadController::class, 'uploadFile']);
-
+Route::post('/upload-multiple-image', [MultipleImageUploadController::class, 'store']);
 Route::get('/export-category-products', [CategoryProductExcelImportController::class, 'export']);
 
 Route::post('/import-category', [CategoryProductExcelImportController::class, 'import']);
